@@ -9,15 +9,19 @@ import 'package:touchable/src/types/types.dart';
 /// The [builder] function passes the [BuildContext] and expects a [CustomPaint] object as its return value.
 class CanvasTouchDetector extends StatefulWidget {
   final CustomTouchPaintBuilder builder;
+  final bool disablePan;
 
-  const CanvasTouchDetector({Key? key, required this.builder}) : super(key: key);
+  const CanvasTouchDetector(
+      {Key? key, required this.builder, this.disablePan = false})
+      : super(key: key);
 
   @override
   _CanvasTouchDetectorState createState() => _CanvasTouchDetectorState();
 }
 
 class _CanvasTouchDetectorState extends State<CanvasTouchDetector> {
-  final StreamController<Gesture> touchController = StreamController.broadcast();
+  final StreamController<Gesture> touchController = StreamController
+      .broadcast();
   StreamSubscription? streamSubscription;
 
   Future<void> addStreamListener(Function(Gesture) callBack) async {
@@ -60,13 +64,15 @@ class _CanvasTouchDetectorState extends State<CanvasTouchDetector> {
 //          touchController.add(Gesture( GestureType.onVerticalDragUpdate, tapDetail));
 //        },
           onLongPressStart: (tapDetail) {
-            touchController.add(Gesture(GestureType.onLongPressStart, tapDetail));
+            touchController.add(
+                Gesture(GestureType.onLongPressStart, tapDetail));
           },
           onLongPressEnd: (tapDetail) {
             touchController.add(Gesture(GestureType.onLongPressEnd, tapDetail));
           },
           onLongPressMoveUpdate: (tapDetail) {
-            touchController.add(Gesture(GestureType.onLongPressMoveUpdate, tapDetail));
+            touchController.add(
+                Gesture(GestureType.onLongPressMoveUpdate, tapDetail));
           },
 //        onScaleStart: (tapDetail) {
 //          touchController.add(Gesture( GestureType.onScaleStart, tapDetail));
@@ -75,31 +81,37 @@ class _CanvasTouchDetectorState extends State<CanvasTouchDetector> {
 //          touchController.add(Gesture( GestureType.onScaleUpdate, tapDetail));
 //        },
           onForcePressStart: (tapDetail) {
-            touchController.add(Gesture(GestureType.onForcePressStart, tapDetail));
+            touchController.add(
+                Gesture(GestureType.onForcePressStart, tapDetail));
           },
           onForcePressEnd: (tapDetail) {
-            touchController.add(Gesture(GestureType.onForcePressEnd, tapDetail));
+            touchController.add(
+                Gesture(GestureType.onForcePressEnd, tapDetail));
           },
           onForcePressPeak: (tapDetail) {
-            touchController.add(Gesture(GestureType.onForcePressPeak, tapDetail));
+            touchController.add(
+                Gesture(GestureType.onForcePressPeak, tapDetail));
           },
           onForcePressUpdate: (tapDetail) {
-            touchController.add(Gesture(GestureType.onForcePressUpdate, tapDetail));
+            touchController.add(
+                Gesture(GestureType.onForcePressUpdate, tapDetail));
           },
-          onPanStart: (tapDetail) {
+          onPanStart: widget.disablePan ? null : (tapDetail) {
             touchController.add(Gesture(GestureType.onPanStart, tapDetail));
           },
-          onPanUpdate: (tapDetail) {
+          onPanUpdate: widget.disablePan ? null : (tapDetail) {
             touchController.add(Gesture(GestureType.onPanUpdate, tapDetail));
           },
-          onPanDown: (tapDetail) {
+          onPanDown: widget.disablePan ? null : (tapDetail) {
             touchController.add(Gesture(GestureType.onPanDown, tapDetail));
           },
           onSecondaryTapDown: (tapDetail) {
-            touchController.add(Gesture(GestureType.onSecondaryTapDown, tapDetail));
+            touchController.add(
+                Gesture(GestureType.onSecondaryTapDown, tapDetail));
           },
           onSecondaryTapUp: (tapDetail) {
-            touchController.add(Gesture(GestureType.onSecondaryTapUp, tapDetail));
+            touchController.add(
+                Gesture(GestureType.onSecondaryTapUp, tapDetail));
           },
         ));
   }
@@ -119,7 +131,8 @@ class TouchDetectionController extends InheritedWidget {
 
   StreamController<Gesture> get controller => _controller;
 
-  const TouchDetectionController(this._controller, this.addListener, {required Widget child}) : super(child: child);
+  const TouchDetectionController(this._controller, this.addListener,
+      {required Widget child}) : super(child: child);
 
   static TouchDetectionController? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<TouchDetectionController>();
